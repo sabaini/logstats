@@ -36,6 +36,10 @@ def cleaner(input, datastore):
             continue
         unit_field = record[0].split("-")
         if len(unit_field) >= 3 and unit_field[0] == "unit":
+            if not (unit_field[-1] and unit_field[-1][:-1].isnumeric()):
+                # We expect the last component to end in a numeral and a colon
+                datastore.dropped_cnt += 1
+                continue
             charm = "-".join(unit_field[1:-1])  # chop of leading unit and trailing num
             yield charm, record[2], record[3].strip()
         else:
